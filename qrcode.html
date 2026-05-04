@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>QR Code - Word Climber Typing</title>
+<style>
+  body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f5f5f5; }
+  .card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .url { color: #666; font-size: 14px; margin-bottom: 20px; word-break: break-all; }
+  #qr { display: flex; justify-content: center; }
+  .hint { color: #999; font-size: 12px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Word Climber Typing</h1>
+  <div class="url">https://azetuy.github.io/typing/</div>
+  <div id="qr"></div>
+  <div class="hint">スマホでスキャンしてプレイ</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+new QRCode(document.getElementById('qr'), {
+  text: 'https://azetuy.github.io/typing/',
+  width: 256,
+  height: 256,
+  correctLevel: QRCode.CorrectLevel.M
+});
+</script>
+</body>
+</html>
