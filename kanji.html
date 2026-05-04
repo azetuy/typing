@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanji Climber Typing</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="kanji-game">
+    <main class="app">
+      <section class="play-area" aria-label="漢字読みタイピングゲーム">
+        <div class="skyline" aria-hidden="true">
+          <span class="star s1"></span>
+          <span class="star s2"></span>
+          <span class="star s3"></span>
+          <span class="cloud c1"></span>
+          <span class="cloud c2"></span>
+        </div>
+
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Kanji Climber Typing</p>
+            <h1>漢字を見て、読みを打つ。</h1>
+          </div>
+          <button class="icon-button" id="soundButton" type="button" aria-label="読み上げのオンオフ" title="読み上げ">
+            <span aria-hidden="true">♪</span>
+          </button>
+        </header>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <span>Level</span>
+            <strong id="levelLabel">1</strong>
+          </div>
+          <div class="stat">
+            <span>XP</span>
+            <strong id="xpLabel">0</strong>
+          </div>
+          <div class="stat">
+            <span>Score</span>
+            <strong id="scoreLabel">0</strong>
+          </div>
+          <div class="stat">
+            <span>Combo</span>
+            <strong id="comboLabel">0</strong>
+          </div>
+          <div class="stat">
+            <span>Accuracy</span>
+            <strong id="accuracyLabel">100%</strong>
+          </div>
+        </div>
+
+        <div class="progress-wrap" aria-label="レベル進行度">
+          <div class="progress-track">
+            <div id="levelProgress" class="progress-fill"></div>
+          </div>
+          <span id="nextLevelLabel">次のレベルまで 5 XP</span>
+        </div>
+
+        <section class="word-stage">
+          <canvas id="celebrationCanvas" width="900" height="360" aria-hidden="true"></canvas>
+          <div class="badge-row">
+            <span id="difficultyBadge" class="badge">Starter</span>
+            <span id="wordCountBadge" class="badge muted">0 / 10</span>
+          </div>
+          <button id="meaningToggleButton" class="meaning-toggle" type="button" aria-pressed="false">
+            読みを隠す
+          </button>
+          <p id="meaningLabel" class="meaning">準備ができたらスタート</p>
+          <div id="wordDisplay" class="word-display">READY</div>
+          <p id="hintLabel" class="hint">漢字が表示されたら読みをローマ字で入力。正解後に読みと意味を表示します。</p>
+        </section>
+
+        <form id="typingForm" class="typing-form" autocomplete="off">
+          <input
+            id="typingInput"
+            type="text"
+            inputmode="latin"
+            spellcheck="false"
+            aria-label="表示された漢字の読みをローマ字で入力"
+            placeholder="読みをローマ字で入力"
+            disabled
+          />
+          <button id="startButton" class="primary-button" type="button">Start</button>
+          <button id="endButton" class="secondary-button" type="button" disabled>終了</button>
+        </form>
+
+        <div class="feedback-row">
+          <p id="feedbackLabel">毎日少しずつ、語いを登っていこう。</p>
+          <p id="timerLabel">00.0s</p>
+        </div>
+      </section>
+
+      <aside class="side-panel" aria-label="学習の記録">
+        <section class="panel-section">
+          <h2>今日のミッション</h2>
+          <div class="mission">
+            <span id="missionText">10問クリア</span>
+            <div class="mini-track"><div id="missionProgress" class="mini-fill"></div></div>
+          </div>
+          <div class="mission">
+            <span>コンボ 5</span>
+            <div class="mini-track"><div id="comboProgress" class="mini-fill accent"></div></div>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <h2>ランク</h2>
+          <div class="rank-card">
+            <div id="rankIcon" class="rank-icon" aria-hidden="true">A</div>
+            <div>
+              <strong id="rankLabel">Apprentice</strong>
+              <span id="rankNote">まずは短い単語から。</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <h2>ランキング</h2>
+          <ol id="rankingList" class="ranking-list"></ol>
+        </section>
+
+        <section class="panel-section">
+          <h2>出題レベル</h2>
+          <select id="levelSelect" class="level-select" aria-label="出題レベルを選択"></select>
+          <p class="csv-name">選んだレベルだけが出題されます。</p>
+        </section>
+
+        <section class="panel-section">
+          <h2>練習モード</h2>
+          <select id="modeSelect" class="level-select" aria-label="練習モードを選択">
+            <option value="mixed">単字＋熟語</option>
+            <option value="single">単字だけ</option>
+            <option value="word">熟語だけ</option>
+            <option value="review">復習優先</option>
+          </select>
+          <p id="coverageSummary" class="csv-name">収録状況を確認中</p>
+        </section>
+
+        <section class="panel-section">
+          <h2>漢字CSV</h2>
+          <div class="csv-actions">
+            <label class="file-button" for="csvInput">CSVを読み込む</label>
+            <input id="csvInput" type="file" accept=".csv,text/csv" />
+            <a id="csvExportLink" class="csv-link" href="./kanji_words.csv" download="kanji_words.csv">漢字リスト</a>
+          </div>
+          <p id="csvNameLabel" class="csv-name">level, kanji, reading, meaning, type, target_kanji, display に対応</p>
+        </section>
+
+        <section class="panel-section">
+          <h2>レベル一覧</h2>
+          <ol id="levelList" class="level-list"></ol>
+        </section>
+      </aside>
+    </main>
+
+    <dialog id="endDialog" class="score-dialog">
+      <form id="endForm" method="dialog">
+        <h2>記録を登録</h2>
+        <p id="endSummary">今回のスコアをランキングに登録します。</p>
+        <label for="playerNameInput">名前</label>
+        <input id="playerNameInput" type="text" maxlength="20" autocomplete="name" placeholder="例: Haru" />
+        <div class="dialog-actions">
+          <button id="cancelEndButton" class="secondary-button" type="button">戻る</button>
+          <button class="primary-button" type="submit">登録して終了</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="./kanji_words_data.js"></script>
+    <script src="./kanji_script.js"></script>
+  </body>
+</html>

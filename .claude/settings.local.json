@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Command *)",
+      "PowerShell(gh auth *)",
+      "mcp__patapim-browser__browser_navigate",
+      "mcp__patapim-browser__browser_screenshot",
+      "mcp__patapim-browser__browser_content"
+    ]
+  }
+}
